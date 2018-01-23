@@ -36,8 +36,7 @@ server.get('/', function(req, res){
 });
 
 server.get('/authorize', function(req, res) {
-	let authUrl = OAuth.getAuthUrl(req);
-	res.redirect(authUrl);
+	res.redirect(OAuth.getAuthUrl(req));
 });
 
 server.get('/callback', function(req, res) {
@@ -78,22 +77,14 @@ server.post('/batch', function(req, res) {
 	if (!req.body.request) {
 		res.send("No request was provided.");
 	} else {
-		Utility.readTokenFile(req.sessionID)
-			.then(function(token) {
-				API.makeBatchRequest(req.body.request, JSON.parse(token).access_token)
-					.then(function(data){
-						res.json(data);
-					})
-					.catch(function(error) {
-						Logger.error(error, new Date() );
-						res.redirect('/');
-					});
+		API.makeBatchRequest(req)
+			.then(function(data){
+				res.json(data);
 			})
 			.catch(function(err){
 				Logger.error(err, new Date() );
 				res.redirect('/');
 			})
-
 	}
 });
 
