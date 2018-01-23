@@ -69,12 +69,7 @@ module.exports = {
 			}
 
 			request(options, function(err, response, body) {
-				if (err){
-					Logger.err(err);
-					reject(err);
-				} else {
-					resolve(JSON.parse(body));
-				}
+				err ? reject(err) : resolve(JSON.parse(body))
 			})
 		})
 	}
